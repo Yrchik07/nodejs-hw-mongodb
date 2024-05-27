@@ -11,8 +11,8 @@ const contactSchema = new Schema({
     },
     email: {
         type: String,
-        // match: [/.+\@.+\..+/, 'Please fill a valid email address'],
-    required: false
+        match: /.+@.+\..+/,
+        required: false
     },
     isFavourite: {
         type: Boolean,
@@ -23,14 +23,8 @@ const contactSchema = new Schema({
         enum: ['work', 'home', 'personal'],
         required: true,
         default: 'personal'
-    },
-    createdAt: {
-        timestamps: true
-    },
-    updatedAt: {
-        timestamps: true
     }
-});
+}, { timestamps: true });
 
-export const Contact = model('Contacts', contactSchema);
+export const Contact = model('Contact', contactSchema);
 
