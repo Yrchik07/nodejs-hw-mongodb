@@ -34,11 +34,24 @@ export const getContactsController = async (req, res) => {
   export const patchContactController = async (req, res) => {
     const {body} = req;
     const {contactId} = req.params;
-    const contact = await upsertContact(contactId, body);
+    const {contact} = await upsertContact(contactId, body);
 
     res.status(200).json({
       ststus: 200,
       message: `Successfully patched contact!`,
+      data: contact,
+    });
+  };
+
+  export const putContactController = async (req, res) => {
+    const {body} = req;
+    const {contactId} = req.params;
+    const {isNew,contact} = await upsertContact(contactId, body, {upsert: true});
+    const status = isNew ? 201 : 200;
+
+    res.status(status).json({
+      status,
+      message: `Successfully upserted contact!`,
       data: contact,
     });
   };
