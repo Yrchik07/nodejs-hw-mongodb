@@ -8,7 +8,7 @@ export const getAllContacts = async () => {
 export const getContactById = async (id) => {
   const contact = await Contact.findById(id);
   if (!contact) {
-    throw createHttpError(404, `Contact with id ${id} not found!`);
+    throw createHttpError(404, `Contact not found!`);
   }
   return contact;
 };
