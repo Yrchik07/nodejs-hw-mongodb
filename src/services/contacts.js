@@ -35,5 +35,6 @@ export const upsertContact = async (id, payload, options = {}) => {
 };
 
 export const deleteContactById = async (contactId) => {
-  await Contact.findByIdAndDelete(contactId);
+  const result = await Contact.findByIdAndDelete(contactId);
+    return result;
 };
