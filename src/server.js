@@ -1,9 +1,9 @@
 import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
-import { getAllContacts, getContactById } from './services/contacts.js';
-import { notFoundMiddleware } from './middlewares/notFoundMiddleware.js';
-import { errorHandlerMiddleware } from './middlewares/errorHandlerMiddleware.js';
+import contactRouter from './routers/contacts.js';
+import { errorHandler } from './middlewares/errorHandler.js';
+import { notFoundHandler } from './middlewares/notFoundHandler.js';
 
 export const setupServer = () => {
   const app = express();
@@ -18,41 +18,17 @@ export const setupServer = () => {
   );
 
   app.use(cors());
+  app.use(express.json());
 
   app.get('/', (req, res) => {
     res.send('Hello User!');
   });
 
-  app.get('/contacts', async (req, res) => {
-    const contacts = await getAllContacts();
-    res.json({
-      ststus: 200,
-      message: 'Successfully found contacts!',
-      data: contacts,
-    });
-  });
+  app.use(contactRouter);
 
-  app.get('/contacts/:contactId', async (req, res) => {
-    const contactId = req.params.contactId;
-    const contact = await getContactById(contactId);
-    
-    if (!contact) {
-      return res.status(404).json({
-        status: 404,
-        message: `Contact with id ${contactId} not found!`,
-      });
-    }
+  app.use(notFoundHandler);
 
-    res.json({
-      ststus: 200,
-      message: `Successfully found contact with id ${contactId}!`,
-      data: contact,
-    });
-  });
-
-  app.use(notFoundMiddleware);
-
-  app.use(errorHandlerMiddleware);
+  app.use(errorHandler);
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
