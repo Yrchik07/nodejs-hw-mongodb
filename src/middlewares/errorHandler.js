@@ -7,6 +7,7 @@ export const errorHandler = (error, req, res, next) => {
       status: error.status,
       message: error.message,
       data: error.data || {},
+      errors: error.errors || [],
     });
   }
 
