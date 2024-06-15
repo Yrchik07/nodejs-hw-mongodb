@@ -6,9 +6,21 @@ import {
   getContactById,
   upsertContact,
 } from '../services/contacts.js';
+import { parsePaginationParams } from '../utils/parsePaginationParams.js';
+import { parseFilters } from '../utils/parseFilters.js';
 
 export const getContactsController = async (req, res) => {
-  const contacts = await getAllContacts();
+  const { page, perPage } = parsePaginationParams(req.query);
+  const { sortBy, sortOrder } = req.query;
+  const filter = parseFilters(req.query);
+
+  const contacts = await getAllContacts({
+    page,
+    perPage,
+    sortBy,
+    sortOrder,
+    filter,
+  });
   res.json({
     ststus: 200,
     message: 'Successfully found contacts!',
@@ -19,7 +31,6 @@ export const getContactsController = async (req, res) => {
 export const getContactByIdController = async (req, res) => {
   const contactId = req.params.contactId;
   const contact = await getContactById(contactId);
-
   res.json({
     ststus: 200,
     message: `Successfully found contact with id ${contactId}!`,
@@ -72,8 +83,9 @@ export const deleteContactIdController = async (req, res, next) => {
     if (!contact) {
       const error = createHttpError(404, 'Contact not found');
       error.data = { message: 'Contact not found' };
-      throw error;    }
-   res.status(204).send();
+      throw error;
+    }
+    res.status(204).send();
   } catch (error) {
     next(error);
   }
