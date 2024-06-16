@@ -13,7 +13,7 @@ import { validateBody } from '../middlewares/validateBody.js';
 import { createContactSchema } from '../validation/createContactSchema.js';
 import { updateContactSchema } from '../validation/updateContactSchema.js';
 
-const contactRouter = Router();
+const contactsRouter = Router();
 const getContactsHandler = ctrlWrapper(getContactsController);
 const getContactByIdHandler = ctrlWrapper(getContactByIdController);
 const createContactsHandler = ctrlWrapper(createContactController);
@@ -21,18 +21,18 @@ const patchContactsHandler = ctrlWrapper(patchContactController);
 const putContactsHandler = ctrlWrapper(putContactController);
 const deleteContactsByIdHandler = ctrlWrapper(deleteContactIdController);
 
-contactRouter.use('/contacts/:contactId', validateMongoid('contactId'));
+contactsRouter.use('/:contactId', validateMongoid('contactId'));
 
-contactRouter.get('/contacts', getContactsHandler);
+contactsRouter.get('/', getContactsHandler);
 
-contactRouter.get('/contacts/:contactId', getContactByIdHandler);
+contactsRouter.get('/:contactId', getContactByIdHandler);
 
-contactRouter.post('/contacts', validateBody(createContactSchema), createContactsHandler);
+contactsRouter.post('/', validateBody(createContactSchema), createContactsHandler);
 
-contactRouter.patch('/contacts/:contactId', validateBody(updateContactSchema), patchContactsHandler);
+contactsRouter.patch('/:contactId', validateBody(updateContactSchema), patchContactsHandler);
 
-contactRouter.put('/contacts/:contactId', validateBody(createContactSchema), putContactsHandler);
+contactsRouter.put('/:contactId', validateBody(createContactSchema), putContactsHandler);
 
-contactRouter.delete('/contacts/:contactId', deleteContactsByIdHandler);
+contactsRouter.delete('/:contactId', deleteContactsByIdHandler);
 
-export default contactRouter;
+export default contactsRouter;
