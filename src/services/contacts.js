@@ -1,8 +1,54 @@
 import createHttpError from 'http-errors';
 import { Contact } from '../db/models/сontact.js';
 
-export const getAllContacts = async () => {
-  return await Contact.find();
+const createPaginationInformation = (page, perPage, count) => {
+  const totalPages = Math.ceil(count / perPage);
+  const hasPreviousPage = page > 1;
+  const hasNextPage = page < totalPages;
+  return {
+    page,
+    perPage,
+    totalItems: count,
+    totalPages,
+    hasPreviousPage,
+    hasNextPage,
+  };
+};
+export const getAllContacts = async ({
+  page = 1,
+  perPage = 10,
+  sortBy = '_id',
+  sortOrder = 'asc',
+  filter = {},
+}) => {
+  const skip = (page - 1) * perPage;
+  const contactFilter = Contact.find();
+  if (filter.type) {
+    contactFilter.where('contactType').equals(filter.type);
+  }
+  if (filter.isFavourite) {
+    contactFilter.where('isFavourite').equals(filter.isFavourite);
+  }
+  const [contactCount, contacts] = await Promise.all([
+    Contact.find().merge(contactFilter).countDocuments(),
+    Contact.find()
+      .merge(contactFilter)
+      .skip(skip)
+      .limit(perPage)
+      .sort({ [sortBy]: sortOrder })
+      .exec(),
+  ]);
+  const paginationInformation = createPaginationInformation(
+    page,
+    perPage,
+    contactCount,
+  );
+  return {
+    data: contacts,
+    page,
+    perPage,
+    ...paginationInformation,
+  };
 };
 
 export const getContactById = async (id) => {
@@ -28,7 +74,7 @@ export const upsertContact = async (id, payload, options = {}) => {
     throw createHttpError(404, `Contact with id ${id} not found!`);
   }
 
-  return{
+  return {
     contact: rawResult.value,
     isNew: !rawResult?.lastErrorObject?.updatedExisting,
   };
@@ -36,5 +82,5 @@ export const upsertContact = async (id, payload, options = {}) => {
 
 export const deleteContactById = async (contactId) => {
   const result = await Contact.findByIdAndDelete(contactId);
-    return result;
+  return result;
 };
