@@ -12,6 +12,7 @@ import { ctrlWrapper } from '../middlewares/ctrlWrapper.js';
 import { validateBody } from '../middlewares/validateBody.js';
 import { createContactSchema } from '../validation/createContactSchema.js';
 import { updateContactSchema } from '../validation/updateContactSchema.js';
+import { authenticate } from '../middlewares/authenticate.js';
 
 const contactsRouter = Router();
 const getContactsHandler = ctrlWrapper(getContactsController);
@@ -22,6 +23,8 @@ const putContactsHandler = ctrlWrapper(putContactController);
 const deleteContactsByIdHandler = ctrlWrapper(deleteContactIdController);
 
 contactsRouter.use('/:contactId', validateMongoid('contactId'));
+
+contactsRouter.use('/', authenticate);
 
 contactsRouter.get('/', getContactsHandler);
 
