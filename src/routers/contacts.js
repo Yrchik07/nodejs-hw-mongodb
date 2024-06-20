@@ -13,6 +13,7 @@ import { validateBody } from '../middlewares/validateBody.js';
 import { createContactSchema } from '../validation/createContactSchema.js';
 import { updateContactSchema } from '../validation/updateContactSchema.js';
 import { authenticate } from '../middlewares/authenticate.js';
+import { checkUserPermissions } from '../middlewares/checkRoles.js';
 
 const contactsRouter = Router();
 const getContactsHandler = ctrlWrapper(getContactsController);
@@ -32,7 +33,7 @@ contactsRouter.get('/:contactId', getContactByIdHandler);
 
 contactsRouter.post('/', validateBody(createContactSchema), createContactsHandler);
 
-contactsRouter.patch('/:contactId', validateBody(updateContactSchema), patchContactsHandler);
+contactsRouter.patch('/:contactId', checkUserPermissions('admin', 'user'), validateBody(updateContactSchema), patchContactsHandler);
 
 contactsRouter.put('/:contactId', validateBody(createContactSchema), putContactsHandler);
 
