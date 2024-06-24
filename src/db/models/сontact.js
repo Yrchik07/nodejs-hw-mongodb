@@ -23,8 +23,11 @@ const contactSchema = new Schema({
         enum: ['work', 'home', 'personal'],
         required: true,
         default: 'personal'
+    },
+    parentId: {
+        type: Schema.ObjectId, required: true
     }
-}, { timestamps: true });
+}, { timestamps: true, versionKey: false });
 
 export const Contact = model('Contact', contactSchema);
 
