@@ -15,7 +15,7 @@ export const registerUserController = async (req, res) => {
   const user = await createUser(req.body);
   res.json({
     status: 200,
-    message: 'User is created',
+    message: 'User is created!',
     data: { user },
   });
 };
@@ -26,7 +26,7 @@ export const loginUserController = async (req, res) => {
     setupSessionCookies(res, session);
     res.json({
       status: 200,
-      message: 'User is logged in!',
+      message: 'Successfully logged in an user!',
       data: { accessToken: session.accessToken },
     });
 
@@ -49,7 +49,7 @@ export const refreshTokenController = async (req, res) => {
 
   res.json({
     status: 200,
-    message: 'Token refreshed successfully!',
+    message: 'Successfully refreshed a session!',
     data: { accessToken: session.accessToken },
   });
 
