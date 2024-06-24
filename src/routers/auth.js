@@ -5,9 +5,14 @@ import { validateBody } from "../middlewares/validateBody.js";
 import { registerUserSchema } from "../validation/registerUserSchema.js";
 import { loginUserSchema } from "../validation/loginValidatorSchema.js";
 
+const registerUserHandler = ctrlWrapper(registerUserController);
+const loginUserHandler = ctrlWrapper(loginUserController);
+const refreshTokenHandler = ctrlWrapper(refreshTokenController);
+const logoutHandler = ctrlWrapper(logoutController);
+
 const authRouter = Router();
-authRouter.post('/register', validateBody(registerUserSchema), ctrlWrapper(registerUserController));
-authRouter.post('/login', validateBody(loginUserSchema), ctrlWrapper(loginUserController));
-authRouter.post('/refresh-token', ctrlWrapper(refreshTokenController));
-authRouter.post('/logout', ctrlWrapper(logoutController));
+authRouter.post('/register', validateBody(registerUserSchema), registerUserHandler);
+authRouter.post('/login', validateBody(loginUserSchema), loginUserHandler);
+authRouter.post('/refresh-token', refreshTokenHandler);
+authRouter.post('/logout', logoutHandler);
 export default authRouter;
