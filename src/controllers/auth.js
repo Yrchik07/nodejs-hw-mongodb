@@ -13,10 +13,10 @@ const setupSessionCookies = (res, session) => {
 };
 export const registerUserController = async (req, res) => {
   const user = await createUser(req.body);
-  res.json({
-    status: 200,
-    message: 'User is created!',
-    data: { user },
+  res.status(201).json({
+    status: 201,
+    data: user,
+    message: `Successfully created user  ${user.name}!`,
   });
 };
 
