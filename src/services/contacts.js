@@ -23,14 +23,14 @@ export const getAllContacts = async ({
   userId,
 }) => {
   const skip = (page - 1) * perPage;
-  const contactFilter = Contact.find();
+  const contactFilter = Contact.find({ userId });
+
   if (filter.type) {
     contactFilter.where('contactType').equals(filter.type);
   }
   if (filter.isFavourite) {
     contactFilter.where('isFavourite').equals(filter.isFavourite);
   }
-  contactFilter.where('parentId').equals(userId);
 
   const [contactCount, contacts] = await Promise.all([
     Contact.find().merge(contactFilter).countDocuments(),
@@ -41,11 +41,13 @@ export const getAllContacts = async ({
       .sort({ [sortBy]: sortOrder })
       .exec(),
   ]);
+
   const paginationInformation = createPaginationInformation(
     page,
     perPage,
     contactCount,
   );
+
   return {
     data: contacts,
     page,
@@ -54,36 +56,47 @@ export const getAllContacts = async ({
   };
 };
 
-export const getContactById = async (id) => {
-  const contact = await Contact.findById(id);
+export const getContactById = async (id, userId) => {
+  const contact = await Contact.findOne({ _id: id, userId });
+
   if (!contact) {
-    throw createHttpError(404, `Contact not found!`);
+    throw createHttpError(404, 'Contact not found or you are not authorized to view it');
   }
+
   return contact;
 };
 
-export const createContact = async (payload, userId) => {
-  const contact = await Contact.create({...payload, parentId: userId});
+export const createContact = async (payload) => {
+  const contact = await Contact.create(payload);
   return contact;
 };
 
-export const upsertContact = async (id, payload, options = {}) => {
-  const rawResult = await Contact.findByIdAndUpdate(id, payload, {
-    new: true,
-    includeResultMetadata: true,
-    ...options,
-  });
-  if (!rawResult || !rawResult.value) {
-    throw createHttpError(404, `Contact with id ${id} not found!`);
+export const upsertContact = async (id, payload, userId, options = {}) => {
+  const contact = await Contact.findOneAndUpdate(
+    { _id: id, userId },
+    payload,
+    {
+      new: true,
+      ...options,
+    },
+  );
+
+  if (!contact) {
+    throw createHttpError(404, 'Contact not found or you are not authorized to update it');
   }
 
   return {
-    contact: rawResult.value,
-    isNew: !rawResult?.lastErrorObject?.updatedExisting,
+    contact,
+    isNew: !contact,
   };
 };
 
-export const deleteContactById = async (contactId) => {
-  const result = await Contact.findByIdAndDelete(contactId);
-  return result;
+export const deleteContactById = async (contactId, userId) => {
+  const contact = await Contact.findOneAndDelete({ _id: contactId, userId });
+
+  if (!contact) {
+    throw createHttpError(404, 'Contact not found or you are not authorized to delete it');
+  }
+
+  return contact;
 };

@@ -24,10 +24,12 @@ const contactSchema = new Schema({
         required: true,
         default: 'personal'
     },
-    parentId: {
-        type: Schema.ObjectId, required: true
-    }
-}, { timestamps: true, versionKey: false });
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+      },
+  }, { timestamps: true, versionKey: false });
 
 export const Contact = model('Contact', contactSchema);
 

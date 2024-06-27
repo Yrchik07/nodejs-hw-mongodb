@@ -1,41 +1,31 @@
-import { Schema, model } from "mongoose";
+import { Schema, model } from 'mongoose';
 
-const userSchema = new Schema({
+const userSchema = new Schema(
+  {
     name: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     email: {
-        type: String,
-        required: true,
-        unique: true
+      type: String,
+      required: true,
+      unique: true,
     },
     password: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now
-    },
-role: {
-    type: String,
-    required: true,
-    default: ['user'],
-    enum: ['user', 'admin'],
-},
-},
-{ timestamps: true, versionKey: false }
+  },
+  {
+    timestamps: true,
+    versionKey: false,
+  },
 );
 
 userSchema.methods.toJSON = function () {
-    const obj = this.toObject();
-    delete obj.password;
-    return obj;
+  const obj = this.toObject();
+  delete obj.password;
+  return obj;
 };
 
 export const User = model('Users', userSchema);
