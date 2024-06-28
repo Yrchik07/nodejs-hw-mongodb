@@ -3,6 +3,10 @@ import { User } from '../db/models/user.js';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import { Session } from '../db/models/session.js';
+import  jwt  from 'jsonwebtoken';
+import { env } from '../utils/env.js';
+import { ENV_VARS } from '../constants/index.js';
+import { sendMail } from '../utils/sendMail.js';
 
 const createSession = () => {
   return {
@@ -77,6 +81,26 @@ export const sendResetPassword = async (email) => {
   if (!user) {
     throw createHttpError(404, 'User not found!');
   }
-
-  
+const token = jwt.sign(
+  {
+  email,
+},
+env(ENV_VARS.JWT_SECRET),
+{
+  expiresIn: '5m',
+},
+);
+try{
+  await sendMail({
+    html: `
+    <h1>Hello!</h1>
+    <p>Here is your reset linK <a href = "${env(ENV_VARS.FRONTEND_HOST)}/reset-password?token=${token}" >link</a>
+    </p> `,
+    to: email,
+    subject: 'Reset your password',
+  });
+} catch (error) {
+  console.log(error);
+  throw createHttpError(500, 'Failed to send email!');
+}
 };
