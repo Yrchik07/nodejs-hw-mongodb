@@ -1,4 +1,4 @@
-import { createUser, loginUser, logoutUser, refreshSession, sendResetPassword } from '../services/auth.js';
+import { createUser, loginUser, logoutUser, refreshSession, resetPassword, sendResetPassword } from '../services/auth.js';
 
 const setupSessionCookies = (res, session) => {
   res.cookie('sessionId', session._id, {
@@ -15,8 +15,8 @@ export const registerUserController = async (req, res) => {
   const user = await createUser(req.body);
   res.status(201).json({
     status: 201,
-    data: user,
     message: `Successfully created user  ${user.name}!`,
+    data: user,
   });
 };
 
@@ -61,4 +61,14 @@ res.json({
   message: 'Reset password email has been successfully sent.',
   data: {},
 });
+};
+
+export const resetPasswordController = async (req, res) => {
+  const { password } = req.body;
+  await resetPassword(req.params.token, password);
+  res.json({
+    status: 200,
+    message: 'Password was successfully reset.',
+    data: {},
+  });
 };

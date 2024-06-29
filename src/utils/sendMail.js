@@ -9,7 +9,6 @@ auth: {
     user: env(ENV_VARS.SMTP_USER),
     pass: env(ENV_VARS.SMTP_PASSWORD),
 },
-from: env(ENV_VARS.SMTP_USER),
 });
 
 export const sendMail = async (options) => {
