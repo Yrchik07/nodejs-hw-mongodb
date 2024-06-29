@@ -13,14 +13,15 @@ export const getContactsController = async (req, res, next) => {
   try {
     const { page, perPage } = parsePaginationParams(req.query);
     const { sortBy, sortOrder } = req.query;
-    const filter = { ...parseFilters(req.query), userId: req.user._id };
-
+    // const filter = { ...parseFilters(req.query), userId: req.user._id };
+    const filter = parseFilters(req.query);
     const contacts = await getAllContacts({
       page,
       perPage,
       sortBy,
       sortOrder,
       filter,
+      userId: req.user._id,
     });
     res.json({
       status: 200,
@@ -35,7 +36,8 @@ export const getContactsController = async (req, res, next) => {
 export const getContactByIdController = async (req, res, next) => {
   try {
     const contactId = req.params.contactId;
-    const contact = await getContactById(contactId, req.user._id);
+    const userId = req.user._id;
+    const contact = await getContactById(contactId, userId);
 
     if (!contact) {
       throw createHttpError(404, 'Contact not found or you are not authorized to view it');
@@ -54,7 +56,7 @@ export const getContactByIdController = async (req, res, next) => {
 export const createContactController = async (req, res, next) => {
   try {
     const { body } = req;
-    const contact = await createContact({ ...body, userId: req.user._id });
+    const contact = await createContact( body, req.user._id);
 
     res.status(201).json({
       status: 201,
@@ -70,7 +72,10 @@ export const patchContactController = async (req, res, next) => {
   try {
     const { body } = req;
     const { contactId } = req.params;
-    const contact = await upsertContact(contactId, body, req.user._id);
+    const userId = req.user._id;
+    const {contact} = await upsertContact(contactId, body, userId, {
+
+    });
 
     if (!contact) {
       throw createHttpError(404, 'Contact not found or you are not authorized to update it');
@@ -90,7 +95,8 @@ export const putContactController = async (req, res, next) => {
   try {
     const { body } = req;
     const { contactId } = req.params;
-    const { isNew, contact } = await upsertContact(contactId, body, req.user._id, {
+    const userId = req.user._id;
+    const { isNew, contact } = await upsertContact(contactId, body, userId, {
       upsert: true,
     });
 
@@ -113,7 +119,8 @@ export const putContactController = async (req, res, next) => {
 export const deleteContactIdController = async (req, res, next) => {
   try {
     const contactId = req.params.contactId;
-    const contact = await deleteContactById(contactId, req.user._id);
+    const userId = req.user._id;
+    const contact = await deleteContactById(contactId, userId);
 
     if (!contact) {
       throw createHttpError(404, 'Contact not found or you are not authorized to delete it');

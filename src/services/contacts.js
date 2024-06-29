@@ -66,8 +66,8 @@ export const getContactById = async (id, userId) => {
   return contact;
 };
 
-export const createContact = async (payload) => {
-  const contact = await Contact.create(payload);
+export const createContact = async (payload, userId) => {
+  const contact = await Contact.create({...payload,  userId });
   return contact;
 };
 
@@ -77,17 +77,18 @@ export const upsertContact = async (id, payload, userId, options = {}) => {
     payload,
     {
       new: true,
+      includeResultMetadata: true,
       ...options,
     },
   );
 
-  if (!contact) {
+  if (!contact || !contact.value) {
     throw createHttpError(404, 'Contact not found or you are not authorized to update it');
   }
 
   return {
-    contact,
-    isNew: !contact,
+    contact: contact.value,
+    isNew: !contact?.lastErrorObject?.updatedExisting,
   };
 };
 
