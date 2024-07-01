@@ -5,8 +5,11 @@ import crypto from 'crypto';
 import { Session } from '../db/models/session.js';
 import  jwt  from 'jsonwebtoken';
 import { env } from '../utils/env.js';
-import { ENV_VARS } from '../constants/index.js';
+import { ENV_VARS, TEMPLATE_DIR } from '../constants/index.js';
 import { sendMail } from '../utils/sendMail.js';
+import Handlebars from 'handlebars';
+import fs from 'fs/promises';
+import path from 'path';
 
 const createSession = () => {
   return {
@@ -91,20 +94,29 @@ env(ENV_VARS.JWT_SECRET),
   expiresIn: '5m',
 },
 );
+
+const templateSource = await fs.readFile(
+  path.join(TEMPLATE_DIR, 'send-reset-password-email.html')
+);
+
+const template = Handlebars.compile(templateSource.toString());
+
+const html = template({
+   name: user.name,
+   link: `${env(
+    ENV_VARS.APP_DOMAIN,
+  )}/reset-password?token=${token}`
+});
 try{
   await sendMail({
-    html: `
-    <h1>Hello!</h1>
-    <p>
-    Here is your reset linK <a href = "${env(ENV_VARS.FRONTEND_HOST)}/reset-password?token=${token}" >link</a>
-    </p> `,
+    html,
     to: email,
     from: env(ENV_VARS.SMTP_FROM),
     subject: 'Reset your password',
   });
 } catch (error) {
   console.log(error);
-  throw createHttpError(500, 'Failed to send email!');
+  throw createHttpError(500, 'Failed to send the email, please try again later.');
 }
 };
 

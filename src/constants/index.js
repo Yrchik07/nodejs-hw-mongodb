@@ -1,3 +1,5 @@
+import path from 'path';
+
 export const ENV_VARS = {
 PORT: 'PORT',
 MONGODB_USER: 'MONGODB_USER',
@@ -9,6 +11,8 @@ SMTP_PORT: 'SMTP_PORT',
 SMTP_USER: 'SMTP_USER',
 SMTP_PASSWORD: 'SMTP_PASSWORD',
 JWT_SECRET: 'JWT_SECRET',
-FRONTEND_HOST: 'FRONTEND_HOST',
+APP_DOMAIN: 'APP_DOMAIN',
 SMTP_FROM: 'SMTP_FROM',
 };
+
+export const TEMPLATE_DIR = path.join(process.cwd(), 'src', 'templates');
