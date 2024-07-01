@@ -14,6 +14,7 @@ import { createContactSchema } from '../validation/createContactSchema.js';
 import { updateContactSchema } from '../validation/updateContactSchema.js';
 import { authenticate } from '../middlewares/authenticate.js';
 import { checkUserPermissions } from '../middlewares/checkRoles.js';
+import { upload } from '../middlewares/upload.js';
 
 const contactsRouter = Router();
 const getContactsHandler = ctrlWrapper(getContactsController);
@@ -31,7 +32,12 @@ contactsRouter.get('/', getContactsHandler);
 
 contactsRouter.get('/:contactId', getContactByIdHandler);
 
-contactsRouter.post('/', validateBody(createContactSchema), createContactsHandler);
+contactsRouter.post(
+  '/',
+  upload.single('avatar'),
+   validateBody(createContactSchema),
+    createContactsHandler
+  );
 
 contactsRouter.patch('/:contactId', checkUserPermissions('admin', 'user'), validateBody(updateContactSchema), patchContactsHandler);
 

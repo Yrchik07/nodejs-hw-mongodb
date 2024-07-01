@@ -1,5 +1,6 @@
 import createHttpError from 'http-errors';
 import { Contact } from '../db/models/сontact.js';
+import { saveFileToLocalMachine } from '../utils/saveFileToLocalMachine.js';
 
 const createPaginationInformation = (page, perPage, count) => {
   const totalPages = Math.ceil(count / perPage);
@@ -66,8 +67,13 @@ export const getContactById = async (id, userId) => {
   return contact;
 };
 
-export const createContact = async (payload, userId) => {
-  const contact = await Contact.create({...payload,  userId });
+export const createContact = async ({avatar, ...payload }, userId) => {
+  const url = await saveFileToLocalMachine(avatar);
+  const contact = await Contact.create({
+    ...payload,
+    userId: userId,
+    avatarUrl: url,
+  });
   return contact;
 };
 
