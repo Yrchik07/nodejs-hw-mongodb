@@ -5,3 +5,8 @@
 .vscode
 .DS_Store
 .idea
+/temp
+/upload
+
+/node_modules
+

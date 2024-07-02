@@ -14,6 +14,7 @@ import { createContactSchema } from '../validation/createContactSchema.js';
 import { updateContactSchema } from '../validation/updateContactSchema.js';
 import { authenticate } from '../middlewares/authenticate.js';
 import { checkUserPermissions } from '../middlewares/checkRoles.js';
+import { upload } from '../middlewares/upload.js';
 
 const contactsRouter = Router();
 const getContactsHandler = ctrlWrapper(getContactsController);
@@ -23,20 +24,51 @@ const patchContactsHandler = ctrlWrapper(patchContactController);
 const putContactsHandler = ctrlWrapper(putContactController);
 const deleteContactsByIdHandler = ctrlWrapper(deleteContactIdController);
 
-contactsRouter.use('/:contactId', validateMongoid('contactId'));
+contactsRouter.use(
+  '/:contactId',
+  validateMongoid('contactId')
+);
 
-contactsRouter.use('/', authenticate);
+contactsRouter.use(
+  '/',
+  authenticate
+);
 
-contactsRouter.get('/', getContactsHandler);
+contactsRouter.get(
+  '/',
+  getContactsHandler
+);
 
-contactsRouter.get('/:contactId', getContactByIdHandler);
+contactsRouter.get(
+  '/:contactId',
+  getContactByIdHandler
+);
 
-contactsRouter.post('/', validateBody(createContactSchema), createContactsHandler);
+contactsRouter.post(
+  '/',
+  upload.single('avatar'),
+   validateBody(createContactSchema),
+    createContactsHandler
+  );
 
-contactsRouter.patch('/:contactId', checkUserPermissions('admin', 'user'), validateBody(updateContactSchema), patchContactsHandler);
+contactsRouter.patch(
+  '/:contactId',
+  // checkUserPermissions('admin', 'user'),
+  upload.single('avatar'),
+  validateBody(updateContactSchema),
+  patchContactsHandler
+);
 
-contactsRouter.put('/:contactId', validateBody(createContactSchema), putContactsHandler);
+contactsRouter.put(
+  '/:contactId',
+  upload.single('avatar'),
+  validateBody(createContactSchema),
+  putContactsHandler
+);
 
-contactsRouter.delete('/:contactId', deleteContactsByIdHandler);
+contactsRouter.delete(
+  '/:contactId',
+  deleteContactsByIdHandler
+);
 
 export default contactsRouter;

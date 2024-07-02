@@ -55,8 +55,11 @@ export const getContactByIdController = async (req, res, next) => {
 
 export const createContactController = async (req, res, next) => {
   try {
-    const { body } = req;
-    const contact = await createContact( body, req.user._id);
+    const { body, file } = req;
+    if (!file) {
+      throw new Error('File is not provided or failed to upload');
+    }
+    const contact = await createContact({...body, avatar: file}, req.user._id);
 
     res.status(201).json({
       status: 201,
@@ -70,10 +73,10 @@ export const createContactController = async (req, res, next) => {
 
 export const patchContactController = async (req, res, next) => {
   try {
-    const { body } = req;
+    const { body, file } = req;
     const { contactId } = req.params;
     const userId = req.user._id;
-    const {contact} = await upsertContact(contactId, body, userId, {
+    const {contact} = await upsertContact(contactId, {...body, avatar: file}, userId, {
 
     });
 
@@ -93,10 +96,10 @@ export const patchContactController = async (req, res, next) => {
 
 export const putContactController = async (req, res, next) => {
   try {
-    const { body } = req;
+    const { body, file } = req;
     const { contactId } = req.params;
     const userId = req.user._id;
-    const { isNew, contact } = await upsertContact(contactId, body, userId, {
+    const { isNew, contact } = await upsertContact(contactId, {...body, avatar: file}, userId, {
       upsert: true,
     });
 

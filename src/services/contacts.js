@@ -1,5 +1,6 @@
 import createHttpError from 'http-errors';
 import { Contact } from '../db/models/сontact.js';
+import { saveFile } from '../utils/saveFile.js';
 
 const createPaginationInformation = (page, perPage, count) => {
   const totalPages = Math.ceil(count / perPage);
@@ -60,21 +61,39 @@ export const getContactById = async (id, userId) => {
   const contact = await Contact.findOne({ _id: id, userId });
 
   if (!contact) {
-    throw createHttpError(404, 'Contact not found or you are not authorized to view it');
+    throw createHttpError(
+      404,
+      'Contact not found or you are not authorized to view it',
+    );
   }
 
   return contact;
 };
 
-export const createContact = async (payload, userId) => {
-  const contact = await Contact.create({...payload,  userId });
-  return contact;
+export const createContact = async ({ avatar, ...payload }, userId) => {
+  try {
+    const url = await saveFile(avatar);
+    const contact = await Contact.create({
+      ...payload,
+      userId: userId,
+      avatarUrl: url,
+    });
+    return contact;
+  } catch (error) {
+    console.error('Error creating contact:', error);
+    throw error;
+  }
 };
-
-export const upsertContact = async (id, payload, userId, options = {}) => {
+export const upsertContact = async (
+  id,
+  { avatar, ...payload },
+  userId,
+  options = {},
+) => {
+  const url = await saveFile(avatar);
   const contact = await Contact.findOneAndUpdate(
     { _id: id, userId },
-    payload,
+    { ...payload, avatarUrl: url },
     {
       new: true,
       includeResultMetadata: true,
@@ -83,7 +102,10 @@ export const upsertContact = async (id, payload, userId, options = {}) => {
   );
 
   if (!contact || !contact.value) {
-    throw createHttpError(404, 'Contact not found or you are not authorized to update it');
+    throw createHttpError(
+      404,
+      'Contact not found or you are not authorized to update it',
+    );
   }
 
   return {
@@ -96,7 +118,10 @@ export const deleteContactById = async (contactId, userId) => {
   const contact = await Contact.findOneAndDelete({ _id: contactId, userId });
 
   if (!contact) {
-    throw createHttpError(404, 'Contact not found or you are not authorized to delete it');
+    throw createHttpError(
+      404,
+      'Contact not found or you are not authorized to delete it',
+    );
   }
 
   return contact;
