@@ -4,8 +4,9 @@
 
 .vscode
 .DS_Store
-.idea.env
-.env
-.env
+.idea
 /temp
 /upload
+
+/node_modules
+

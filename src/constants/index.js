@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'node:path';
 
 export const ENV_VARS = {
   PORT: 'PORT',
@@ -13,7 +13,9 @@ export const ENV_VARS = {
   JWT_SECRET: 'JWT_SECRET',
   APP_DOMAIN: 'APP_DOMAIN',
   SMTP_FROM: 'SMTP_FROM',
-  BACKEND_HOST: 'BACKEND_HOST',
+  CLOUDINARY_NAME: 'CLOUDINARY_NAME',
+  CLOUDINARY_API_KEY: 'CLOUDINARY_API_KEY',
+  CLOUDINARY_API_SECRET: 'CLOUDINARY_API_SECRET',
 };
 
 export const TEMPLATE_DIR = path.join(process.cwd(), 'src', 'templates');

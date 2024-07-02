@@ -56,7 +56,10 @@ export const getContactByIdController = async (req, res, next) => {
 export const createContactController = async (req, res, next) => {
   try {
     const { body, file } = req;
-    const contact = await createContact( {...body, avatar: file}, req.user._id);
+    if (!file) {
+      throw new Error('File is not provided or failed to upload');
+    }
+    const contact = await createContact({...body, avatar: file}, req.user._id);
 
     res.status(201).json({
       status: 201,
