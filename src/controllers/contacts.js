@@ -73,10 +73,10 @@ export const createContactController = async (req, res, next) => {
 
 export const patchContactController = async (req, res, next) => {
   try {
-    const { body } = req;
+    const { body, file } = req;
     const { contactId } = req.params;
     const userId = req.user._id;
-    const {contact} = await upsertContact(contactId, body, userId, {
+    const {contact} = await upsertContact(contactId, {...body, avatar: file}, userId, {
 
     });
 
@@ -96,10 +96,10 @@ export const patchContactController = async (req, res, next) => {
 
 export const putContactController = async (req, res, next) => {
   try {
-    const { body } = req;
+    const { body, file } = req;
     const { contactId } = req.params;
     const userId = req.user._id;
-    const { isNew, contact } = await upsertContact(contactId, body, userId, {
+    const { isNew, contact } = await upsertContact(contactId, {...body, avatar: file}, userId, {
       upsert: true,
     });
 
