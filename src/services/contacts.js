@@ -76,7 +76,7 @@ export const createContact = async ({ avatar, ...payload }, userId) => {
     const contact = await Contact.create({
       ...payload,
       userId: userId,
-      avatarUrl: url,
+      photo: url,
     });
     return contact;
   } catch (error) {
@@ -93,7 +93,7 @@ export const upsertContact = async (
   const url = await saveFile(avatar);
   const contact = await Contact.findOneAndUpdate(
     { _id: id, userId },
-    { ...payload, avatarUrl: url },
+    { ...payload, photo: url },
     {
       new: true,
       includeResultMetadata: true,

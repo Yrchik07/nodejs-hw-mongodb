@@ -33,9 +33,12 @@ const contactSchema = new Schema({
     //     type: Schema.Types.ObjectId,
     //     required: true,
     //   },
-      avatarUrl: {
+    photo: {
         type: String,
       },
+    //   avatarUrl: {
+    //     type: String,
+    //   },
   }, { timestamps: true, versionKey: false });
 
 export const Contact = model('Contact', contactSchema);
