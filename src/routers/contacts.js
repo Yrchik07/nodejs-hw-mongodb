@@ -13,7 +13,6 @@ import { validateBody } from '../middlewares/validateBody.js';
 import { createContactSchema } from '../validation/createContactSchema.js';
 import { updateContactSchema } from '../validation/updateContactSchema.js';
 import { authenticate } from '../middlewares/authenticate.js';
-import { checkUserPermissions } from '../middlewares/checkRoles.js';
 import { upload } from '../middlewares/upload.js';
 
 const contactsRouter = Router();
@@ -53,7 +52,6 @@ contactsRouter.post(
 
 contactsRouter.patch(
   '/:contactId',
-  // checkUserPermissions('admin', 'user'),
   upload.single('avatar'),
   validateBody(updateContactSchema),
   patchContactsHandler

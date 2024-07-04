@@ -20,5 +20,5 @@ authRouter.post('/login', validateBody(loginUserSchema), loginUserHandler);
 authRouter.post('/refresh-token', refreshTokenHandler);
 authRouter.post('/logout', logoutHandler);
 authRouter.post('/send-reset-email', validateBody(setResedPasswordSchema), sendResetEmailHandler);
-authRouter.post('/reset-password', validateBody(resetPasswordSchema), resetPasswordHandler);
+authRouter.post('/reset-pwd', validateBody(resetPasswordSchema), resetPasswordHandler);
 export default authRouter;
