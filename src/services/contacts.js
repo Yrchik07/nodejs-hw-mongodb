@@ -70,9 +70,9 @@ export const getContactById = async (id, userId) => {
   return contact;
 };
 
-export const createContact = async ({ avatar, ...payload }, userId) => {
+export const createContact = async ({ photo, ...payload }, userId) => {
   try {
-    const url = await saveFile(avatar);
+    const url = await saveFile(photo);
     const contact = await Contact.create({
       ...payload,
       userId: userId,
@@ -86,11 +86,11 @@ export const createContact = async ({ avatar, ...payload }, userId) => {
 };
 export const upsertContact = async (
   id,
-  { avatar, ...payload },
+  { photo, ...payload },
   userId,
   options = {},
 ) => {
-  const url = await saveFile(avatar);
+  const url = await saveFile(photo);
   const contact = await Contact.findOneAndUpdate(
     { _id: id, userId },
     { ...payload, photo: url },
