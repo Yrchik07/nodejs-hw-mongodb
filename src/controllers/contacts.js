@@ -8,6 +8,7 @@ import {
 } from '../services/contacts.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseFilters } from '../utils/parseFilters.js';
+import { saveToCloudiary } from '../utils/saveToCloudiary.js';
 
 export const getContactsController = async (req, res, next) => {
   try {
@@ -56,10 +57,12 @@ export const getContactByIdController = async (req, res, next) => {
 export const createContactController = async (req, res, next) => {
   try {
     const { body, file } = req;
-    if (!file) {
-      throw new Error('File is not provided or failed to upload');
+    if (!body.name || !body.phoneNumber) {
+      next(createHttpError(400, 'Name and phone number are required!'));
+      return;
     }
-    const contact = await createContact({...body, avatar: file}, req.user._id);
+
+    const contact = await createContact({...body, photo: file}, req.user._id);
 
     res.status(201).json({
       status: 201,
@@ -76,7 +79,7 @@ export const patchContactController = async (req, res, next) => {
     const { body, file } = req;
     const { contactId } = req.params;
     const userId = req.user._id;
-    const {contact} = await upsertContact(contactId, {...body, avatar: file}, userId, {
+    const {contact} = await upsertContact(contactId, {...body, photo: file}, userId, {
 
     });
 
@@ -99,7 +102,7 @@ export const putContactController = async (req, res, next) => {
     const { body, file } = req;
     const { contactId } = req.params;
     const userId = req.user._id;
-    const { isNew, contact } = await upsertContact(contactId, {...body, avatar: file}, userId, {
+    const { isNew, contact } = await upsertContact(contactId, {...body, photo: file}, userId, {
       upsert: true,
     });
 
