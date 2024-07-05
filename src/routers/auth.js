@@ -1,11 +1,12 @@
 import { Router } from "express";
-import { loginUserController, logoutController, refreshTokenController, registerUserController, resetPasswordController, sendResetPasswordEmailController } from "../controllers/auth.js";
+import { getOAuthUrlController, loginUserController, logoutController, refreshTokenController, registerUserController, resetPasswordController, sendResetPasswordEmailController, verifyGoogleOAuthController } from "../controllers/auth.js";
 import { ctrlWrapper } from "../middlewares/ctrlWrapper.js";
 import { validateBody } from "../middlewares/validateBody.js";
 import { registerUserSchema } from "../validation/registerUserSchema.js";
 import { loginUserSchema } from "../validation/loginValidatorSchema.js";
-import { setResedPasswordSchema } from "../validation/sendResetPasswordEmailSchema.js";
+import { setResetPasswordSchema } from "../validation/sendResetPasswordEmailSchema.js";
 import { resetPasswordSchema } from "../validation/resetPasswordSchema.js";
+import { validationGoogleOAuthSchema } from "../validation/validationGoogleOAuthSchema.js";
 
 const registerUserHandler = ctrlWrapper(registerUserController);
 const loginUserHandler = ctrlWrapper(loginUserController);
@@ -14,6 +15,7 @@ const logoutHandler = ctrlWrapper(logoutController);
 const sendResetEmailHandler = ctrlWrapper(sendResetPasswordEmailController);
 const resetPasswordHandler = ctrlWrapper(resetPasswordController);
 const getOAuthUrlHandler = ctrlWrapper(getOAuthUrlController);
+const verifyGoogleOAuthHandler = ctrlWrapper(verifyGoogleOAuthController);
 
 const authRouter = Router();
 
@@ -41,7 +43,7 @@ authRouter.post(
 
 authRouter.post(
     '/send-reset-email',
-    validateBody(setResedPasswordSchema),
+    validateBody(setResetPasswordSchema),
     sendResetEmailHandler
 );
 
@@ -54,6 +56,11 @@ authRouter.post(
 authRouter.post(
     '/get-oauth-url',
     getOAuthUrlHandler
+);
+authRouter.post(
+    '/verify-google-oauth',
+    validateBody(validationGoogleOAuthSchema),
+    verifyGoogleOAuthHandler
 );
 
 export default authRouter;
