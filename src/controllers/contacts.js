@@ -8,13 +8,11 @@ import {
 } from '../services/contacts.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseFilters } from '../utils/parseFilters.js';
-import { saveToCloudiary } from '../utils/saveToCloudiary.js';
 
 export const getContactsController = async (req, res, next) => {
   try {
     const { page, perPage } = parsePaginationParams(req.query);
     const { sortBy, sortOrder } = req.query;
-    // const filter = { ...parseFilters(req.query), userId: req.user._id };
     const filter = parseFilters(req.query);
     const contacts = await getAllContacts({
       page,
