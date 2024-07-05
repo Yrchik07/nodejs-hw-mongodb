@@ -29,16 +29,9 @@ const contactSchema = new Schema({
         ref: 'User',
         required: true,
       },
-    //   parentId: {
-    //     type: Schema.Types.ObjectId,
-    //     required: true,
-    //   },
     photo: {
         type: String,
       },
-    //   avatarUrl: {
-    //     type: String,
-    //   },
   }, { timestamps: true, versionKey: false });
 
 export const Contact = model('Contact', contactSchema);
