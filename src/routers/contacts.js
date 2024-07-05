@@ -45,21 +45,21 @@ contactsRouter.get(
 
 contactsRouter.post(
   '/',
-  upload.single('avatar'),
+  upload.single('photo'),
    validateBody(createContactSchema),
     createContactsHandler
   );
 
 contactsRouter.patch(
   '/:contactId',
-  upload.single('avatar'),
+  upload.single('photo'),
   validateBody(updateContactSchema),
   patchContactsHandler
 );
 
 contactsRouter.put(
   '/:contactId',
-  upload.single('avatar'),
+  upload.single('photo'),
   validateBody(createContactSchema),
   putContactsHandler
 );
