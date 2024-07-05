@@ -18,10 +18,49 @@ const getOAuthUrlHandler = ctrlWrapper(getOAuthUrlController);
 const verifyGoogleOAuthHandler = ctrlWrapper(verifyGoogleOAuthController);
 
 const authRouter = Router();
-authRouter.post('/register', validateBody(registerUserSchema), registerUserHandler);
-authRouter.post('/login', validateBody(loginUserSchema), loginUserHandler);
-authRouter.post('/refresh-token', refreshTokenHandler);
-authRouter.post('/logout', logoutHandler);
-authRouter.post('/send-reset-email', validateBody(setResedPasswordSchema), sendResetEmailHandler);
-authRouter.post('/reset-pwd', validateBody(resetPasswordSchema), resetPasswordHandler);
+
+authRouter.post(
+    '/register',
+    validateBody(registerUserSchema),
+    registerUserHandler
+);
+
+authRouter.post(
+    '/login',
+    validateBody(loginUserSchema),
+    loginUserHandler
+);
+
+authRouter.post(
+    '/refresh-token',
+    refreshTokenHandler
+);
+
+authRouter.post(
+    '/logout',
+    logoutHandler
+);
+
+authRouter.post(
+    '/send-reset-email',
+    validateBody(setResetPasswordSchema),
+    sendResetEmailHandler
+);
+
+authRouter.post(
+    '/reset-password',
+    validateBody(resetPasswordSchema),
+    resetPasswordHandler
+);
+
+authRouter.post(
+    '/get-oauth-url',
+    getOAuthUrlHandler
+);
+authRouter.post(
+    '/verify-google-oauth',
+    validateBody(validationGoogleOAuthSchema),
+    verifyGoogleOAuthHandler
+);
+
 export default authRouter;
