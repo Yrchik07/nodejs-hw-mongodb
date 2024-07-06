@@ -15,8 +15,13 @@ tags:
 servers:
   - url: http://localhost:3000
   - url: https://example.com/api/v1
-# paths:
-  # Тут будут ссылки на эндпоинты
+paths:
+  /contacs/{id}:
+    get:
+      $ref: ../swagger/paths/contacts/{id}/get.yaml
+  /contacs:
+    get:
+      $ref: ../swagger/paths/contacts/get.yaml
 components:
   securitySchemes:
     bearerAuth:

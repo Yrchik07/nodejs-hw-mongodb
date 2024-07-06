@@ -27,7 +27,6 @@
       "description": "API for auth"
     }
   ],
-  "paths": null,
   "components": {
     "securitySchemes": {
       "bearerAuth": {
