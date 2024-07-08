@@ -2,7 +2,7 @@ tags:
   - login
 summary: Login user to get token
 operationId: loginUser
-description: 'Login user to get token'
+description: 'Sign in to get a token for future use'
 security:
   - bearerAuth: []
 requestBody:

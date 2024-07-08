@@ -2,7 +2,7 @@ tags:
   - Contacts
 summary: Patch contact by id
 operationId: patchContact
-description: Patch contact by id
+description: Patch contact by id!
 security:
   - bearerAuth: []
 parameters:
