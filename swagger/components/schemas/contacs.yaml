@@ -1,6 +1,5 @@
 type: object
 required:
-  -  _id
   - name
   - phoneNumber
   - email
@@ -8,7 +7,26 @@ required:
   - contactType
   - userId
   - photo
-  properties:
-    _id:
-      type: string
-      example: 
+properties:
+  name:
+    type: string
+    example: Vasya
+  phoneNumber:
+    type: string
+    example: +380123456789
+  email:
+    type: string
+    example: 'test@gmail.com'
+  isFavourite:
+    type: boolean
+    example: true
+  contactType:
+    type: string
+    enum: ['work', 'home', 'personal']
+    example: 'work'
+  userId:
+    type: string
+    example: 66800e1312f5e46cf145fd00
+  photo:
+    type: string
+    example: <https://res.cloudinary.com/dfdinboww/image/upload/v1720113389/sopoome4b0feh6v3gedu.jpg>
