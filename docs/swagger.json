@@ -122,7 +122,7 @@
         ],
         "summary": "Login user to get token",
         "operationId": "loginUser",
-        "description": "Login user to get token",
+        "description": "Sign in to get a token for future use",
         "security": [
           {
             "bearerAuth": []
@@ -366,7 +366,7 @@
         ],
         "summary": "Create contact",
         "operationId": "createContact",
-        "description": "Create a contact with payload",
+        "description": "Create a contact with payload !",
         "security": [
           {
             "bearerAuth": []
@@ -538,7 +538,7 @@
         ],
         "summary": "Patch contact by id",
         "operationId": "patchContact",
-        "description": "Patch contact by id",
+        "description": "Patch contact by id!",
         "security": [
           {
             "bearerAuth": []
