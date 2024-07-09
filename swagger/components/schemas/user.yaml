@@ -1,0 +1,24 @@
+type: object
+required:
+  - name
+  - email
+  - password
+properties:
+  _id:
+    type: string
+    example: '6682ddbc30a704c3d22edd43'
+  name:
+    type: string
+    example: 'Vasya'
+  email:
+    type: string
+    example: 'test@example.com'
+  password:
+    type: string
+    example: '123456'
+  createdAt:
+    type: string
+    example: '2021-01-01T00:00:00.000Z'
+  updatedAt:
+    type: string
+    example: '2021-01-01T00:00:00.000Z'
