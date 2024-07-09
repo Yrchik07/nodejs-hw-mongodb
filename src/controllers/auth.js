@@ -7,7 +7,7 @@ import {
   resetPassword,
   sendResetPassword,
 } from '../services/auth.js';
-import { generateOAuthURL } from '../utils/googleOauth.js';
+import { generateOAuthURL } from '../utils/googleOAuth.js';
 
 const setupSessionCookies = (res, session) => {
   res.cookie('sessionId', session._id, {

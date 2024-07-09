@@ -10,7 +10,7 @@ import { sendMail } from '../utils/sendMail.js';
 import Handlebars from 'handlebars';
 import fs from 'fs/promises';
 import path from 'path';
-import {validateGoogleOAuthCode } from '../utils/googleOauth.js';
+import {validateGoogleOAuthCode } from '../utils/googleOAuth.js';
 
 const createSession = () => {
   return {
